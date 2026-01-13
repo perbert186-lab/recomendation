@@ -52,6 +52,16 @@ const genreLabels = {
   }
 };
 
+// Категории для поиска
+const categoryNames = {
+  films: "🎬 Фильмы",
+  books: "📚 Книги", 
+  courses: "🎓 Курсы",
+  music: "🎵 Музыка",
+  games: "🎮 Игры",
+  podcasts: "🎧 Подкасты"
+};
+
 // Функция для генерации 100 рекомендаций в каждом жанре
 function generate100Items(baseItems) {
   const items = [];
@@ -88,7 +98,7 @@ const recommendationsDB = {
       "Миф", "Сказание", "Легенда", "Сага", "Эпос"
     ]),
     comedy: generate100Items([
-      "1+1", "Гранд Будапешт", "Шрек", "Мальчишник в Вегасе", "Отель 'Гранд Будапешт'",
+      "1+1", "Гранд Будапешт", "Шрек", "Мальчишник в Вегаас", "Отель 'Гранд Будапешт'",
       "День сурка", "Американский пирог", "Очень страшное кино", "Борат", "Маска",
       "Трудный ребенок", "Один дома", "Мистер Бин", "Астерикс и Обеликс", "Иван Васильевич меняет профессию",
       "Операция Ы", "Кавказская пленница", "Бриллиантовая рука", "Джентльмены удачи", "Служебный роман",
@@ -117,7 +127,7 @@ const recommendationsDB = {
     ]),
     action: generate100Items([
       "Тёмный рыцарь", "Бесславные ублюдки", "Джон Уик", "Миссия невыполнима", "Безумный Макс",
-      "Мадагаскар", "Трансформеры", "Мстители", "Человек-паук", "Бэтмен",
+      "Мадагаскаар", "Трансформеры", "Мстители", "Человек-паук", "Бэтмен",
       "Супермен", "Железный человек", "Тор", "Капитан Америка", "Чёрная вдова",
       "Стражники галактики", "Дэдпул", "Логан", "Веном", "Халк",
       "Доктор Стрэндж", "Шан-Чи", "Вечные", "Морбиус", "Человек-муравей"
@@ -198,7 +208,7 @@ const recommendationsDB = {
       "Sapiens", "Оружие, микробы и сталь", "Вторая мировая война", "История Российского государства", "Цивилизация",
       "Всемирная история", "История Древнего мира", "История Средних веков", "История Нового времени", "История Новейшего времени",
       "История России", "История Европы", "История Азии", "История Америки", "История Африки",
-      "История Австралии", "История Китая", "История Японии", "История Индии", "История Персии",
+      "История Австралии", "История Китая", "История Япония", "История Индия", "История Персии",
       "История Египта", "История Греции", "История Рима", "История Византии", "История Османской империи"
     ])
   },
@@ -464,71 +474,6 @@ const recommendationsDB = {
   }
 };
 
-// Добавляем счетчик рекомендаций при загрузке
-document.addEventListener("DOMContentLoaded", function() {
-  // Подсчет общего количества рекомендаций
-  let totalCount = 0;
-  for (const category in recommendationsDB) {
-    for (const genre in recommendationsDB[category]) {
-      totalCount += recommendationsDB[category][genre].length;
-    }
-  }
-  
-  console.log(`Всего рекомендаций в базе: ${totalCount}`);
-  
-  // Показываем уведомление о количестве рекомендаций
-  const notification = document.createElement("div");
-  notification.className = "notification";
-  notification.style.background = "linear-gradient(135deg, #6366f1, #8b5cf6)";
-  notification.textContent = `✅ База данных загружена: ${totalCount} рекомендаций в ${Object.keys(recommendationsDB).length} категориях!`;
-  document.body.appendChild(notification);
-  
-  setTimeout(() => {
-    notification.remove();
-  }, 5000);
-});
-
-// Остальной код остается без изменений...
-
-// База знаний для AI
-const aiKnowledgeBase = {
-  // Ключевые слова для определения категории
-  keywords: {
-    films: ["фильм", "кино", "сериал", "кинотеатр", "смотреть", "режиссер", "актер", "драма", "комедия", "боевик", "триллер", "ужасы", "фэнтези", "фантастика", "кинолента", "премьера", "блокбастер", "экранизация"],
-    books: ["книга", "читать", "литература", "автор", "роман", "библиотека", "издательство", "писатель", "чтение", "публицистика", "бестселлер", "глава", "страница", "проза", "поэзия"],
-    courses: ["курс", "обучение", "учеба", "образование", "урок", "лекция", "семинар", "вебинар", "тренинг", "мастер-класс", "онлайн-курс", "образовательный", "программа", "модуль", "учебник"],
-    music: ["музыка", "песня", "альбом", "исполнитель", "слушать", "плейлист", "радио", "концерт", "группа", "певен", "мелодия", "трек", "аудио", "хит", "сингл", "композиция"],
-    games: ["игра", "гейм", "игровой", "геймплей", "консоль", "приставка", "steam", "игрок", "прохождение", "рпг", "шутер", "стратегия", "симулятор", "геймер", "мультиплеер", "платформа"],
-    podcasts: ["подкаст", "аудио", "радио", "интервью", "беседа", "обсуждение", "эфир", "выпуск", "аудиокнига", "аудиошоу", "вещание", "программа", "трансляция"]
-  },
-  
-  // Ответы AI
-  responses: {
-    greeting: "Привет! Я ваш AI помощник по рекомендациям. Я могу порекомендовать фильмы, сериалы, книги, курсы, музыку, игры и подкасты по вашим предпочтениям. Просто опишите, что вы ищете!",
-    
-    noMatch: "Я не совсем понял ваш запрос. Попробуйте уточнить, например: 'Порекомендуй фильмы в жанре научная фантастика' или 'Какие книги по саморазвитию посоветуешь?'",
-    
-    categoryTemplate: (category, items) => {
-      const categoryNames = {
-        films: "🎬 Фильмы",
-        books: "📚 Книги", 
-        courses: "🎓 Курсы",
-        music: "🎵 Музыка",
-        games: "🎮 Игры",
-        podcasts: "🎧 Подкасты"
-      };
-      
-      const categoryName = categoryNames[category] || category;
-      
-      return `Вот что я нашел по вашему запросу в категории <strong>${categoryName}</strong>:<br><br>` +
-             items.map((item, i) => `${i+1}. <strong>${item.title}</strong>` + 
-               (item.description ? `<br><small>${item.description}</small>` : '') +
-               (item.rating ? ` <span style="color:#fbbf24;">⭐ ${item.rating}</span>` : '')).join('<br><br>') + 
-             `<br><br>Надеюсь, эти рекомендации вам понравятся! Если хотите более точные рекомендации, укажите дополнительные детали.`;
-    }
-  }
-};
-
 // ===============================
 // Работа с localStorage: отзывы
 // ===============================
@@ -587,54 +532,27 @@ function getReviewsForTitle(title) {
 }
 
 // ===============================
-// AI Помощник
+// Упрощенный помощник по поиску
 // ===============================
-class AIAssistant {
+class SimpleAssistant {
   constructor() {
-    this.chatHistory = [];
-    this.isTyping = false;
-    this.selectedCategory = 'all'; // по умолчанию все категории
     this.init();
   }
   
   init() {
     this.setupEventListeners();
-    this.addMessage('ai', aiKnowledgeBase.responses.greeting);
   }
   
   setupEventListeners() {
     const aiForm = document.getElementById('ai-form');
     const aiInput = document.getElementById('ai-input');
-    const aiChat = document.getElementById('ai-chat');
     
-    // Кнопки выбора категории
-    document.querySelectorAll('.ai-category-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.ai-category-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        this.selectedCategory = btn.dataset.category;
-        
-        // Сообщение о смене категории
-        const categoryNames = {
-          all: 'все категории',
-          films: 'фильмы',
-          books: 'книги',
-          courses: 'курсы',
-          music: 'музыку',
-          games: 'игры',
-          podcasts: 'подкасты'
-        };
-        
-        this.addMessage('ai', `Теперь я буду искать рекомендации в категории: <strong>${categoryNames[this.selectedCategory]}</strong>. Опишите, что вы ищете!`);
-      });
-    });
-    
+    // Обработка формы поиска
     aiForm.addEventListener('submit', (e) => {
       e.preventDefault();
       const query = aiInput.value.trim();
       if (query) {
-        this.processQuery(query);
-        aiInput.value = '';
+        this.searchRecommendations(query);
       }
     });
     
@@ -649,217 +567,168 @@ class AIAssistant {
     
     // Автофокус на поле ввода
     aiInput.focus();
-    
-    // Прокрутка вниз при новых сообщениях
-    const observer = new MutationObserver(() => {
-      aiChat.scrollTop = aiChat.scrollHeight;
-    });
-    observer.observe(aiChat, { childList: true, subtree: true });
   }
   
-  async processQuery(query) {
-    this.addMessage('user', query);
-    this.showTypingIndicator();
+  searchRecommendations(query) {
+    const loading = document.getElementById('ai-loading');
+    const resultsContainer = document.getElementById('ai-results');
+    
+    // Показываем индикатор загрузки
+    loading.classList.add('active');
+    resultsContainer.innerHTML = '';
     
     // Имитация задержки для реалистичности
     setTimeout(() => {
-      const response = this.generateResponse(query);
-      this.addMessage('ai', response);
-      this.hideTypingIndicator();
-    }, 800 + Math.random() * 800);
+      const results = this.performSearch(query.toLowerCase());
+      this.displayResults(results, query);
+      loading.classList.remove('active');
+    }, 500);
   }
   
-  generateResponse(query) {
-    const queryLower = query.toLowerCase();
+  performSearch(query) {
+    const results = [];
+    const searchWords = query.split(' ').filter(word => word.length > 2);
     
-    // Определяем категорию в зависимости от выбора пользователя
-    let matchedCategory = this.selectedCategory;
-    
-    // Если выбрана категория "all", пытаемся определить по ключевым словам
-    if (matchedCategory === 'all') {
-      for (const [category, keywords] of Object.entries(aiKnowledgeBase.keywords)) {
-        if (keywords.some(keyword => queryLower.includes(keyword))) {
-          matchedCategory = category;
-          break;
-        }
-      }
-      
-      // Если категория не определена, пробуем определить по дополнительным ключевым словам
-      if (matchedCategory === 'all') {
-        if (queryLower.includes('научная фантастика') || queryLower.includes('фантастика') || queryLower.includes('кино') || queryLower.includes('сериал')) {
-          matchedCategory = 'films';
-        } else if (queryLower.includes('читать') || queryLower.includes('литература') || queryLower.includes('книга') || queryLower.includes('роман')) {
-          matchedCategory = 'books';
-        } else if (queryLower.includes('учиться') || queryLower.includes('обучаться') || queryLower.includes('курс') || queryLower.includes('образование')) {
-          matchedCategory = 'courses';
-        } else if (queryLower.includes('слушать') || queryLower.includes('мелодия') || queryLower.includes('песня') || queryLower.includes('альбом')) {
-          matchedCategory = 'music';
-        } else if (queryLower.includes('играть') || queryLower.includes('гейминг') || queryLower.includes('игра') || queryLower.includes('геймплей')) {
-          matchedCategory = 'games';
-        } else if (queryLower.includes('аудио') || queryLower.includes('подкаст') || queryLower.includes('радио') || queryLower.includes('интервью')) {
-          matchedCategory = 'podcasts';
-        }
-      }
+    // Если запрос слишком короткий
+    if (searchWords.length === 0) {
+      return results;
     }
     
-    // Если категория определена (не 'all')
-    if (matchedCategory && matchedCategory !== 'all') {
-      // Определяем жанр
-      let matchedGenre = null;
-      const genres = genreLabels[matchedCategory];
-      
-      for (const [genreKey, genreName] of Object.entries(genres)) {
-        if (queryLower.includes(genreName.toLowerCase())) {
-          matchedGenre = genreKey;
-          break;
-        }
-      }
-      
-      // Если жанр не определен, берем из всех жанров выбранной категории
-      let items = [];
-      if (matchedGenre) {
-        // Берем рекомендации из определенного жанра
-        items = this.getRecommendationsFromCategory(matchedCategory, matchedGenre, 15);
-      } else {
-        // Берем рекомендации из всех жанров выбранной категории
-        items = this.getRecommendationsFromAllGenres(matchedCategory, 15);
-      }
-      
-      if (items.length > 0) {
-        return aiKnowledgeBase.responses.categoryTemplate(matchedCategory, items);
-      }
-    }
-    
-    // Если категория 'all' или не удалось найти в конкретной категории
-    if (matchedCategory === 'all') {
-      const allItems = [];
-      const categories = ['films', 'books', 'courses', 'music', 'games', 'podcasts'];
-      
-      categories.forEach(category => {
-        const items = this.getRecommendationsFromAllGenres(category, 5);
-        allItems.push(...items.map(item => ({...item, category})));
-      });
-      
-      if (allItems.length > 0) {
-        const shuffled = [...allItems].sort(() => Math.random() - 0.5).slice(0, 20);
-        
-        let response = `Вот несколько рекомендаций по вашему запросу "<strong>${query}</strong>" (по всем категориям):<br><br>`;
-        shuffled.forEach((item, i) => {
-          const categoryIcon = {
-            films: '🎬', books: '📚', courses: '🎓', 
-            music: '🎵', games: '🎮', podcasts: '🎧'
-          }[item.category] || '📌';
+    // Проходим по всем категориям и жанрам
+    for (const [category, genres] of Object.entries(recommendationsDB)) {
+      for (const [genre, items] of Object.entries(genres)) {
+        for (const item of items) {
+          // Проверяем, содержит ли элемент ключевые слова
+          const itemLower = item.toLowerCase();
           
-          response += `${i+1}. ${categoryIcon} <strong>${item.title}</strong>`;
-          if (item.description) {
-            response += `<br><small>${item.description}</small>`;
+          // Проверяем каждое ключевое слово
+          let matches = false;
+          for (const word of searchWords) {
+            if (itemLower.includes(word)) {
+              matches = true;
+              break;
+            }
           }
-          response += '<br><br>';
-        });
-        response += 'Надеюсь, эти рекомендации вам понравятся!';
-        return response;
+          
+          // Также проверяем жанр и категорию
+          const genreName = genreLabels[category]?.[genre]?.toLowerCase() || '';
+          const categoryName = categoryNames[category]?.toLowerCase() || '';
+          
+          if (!matches) {
+            // Проверяем жанр
+            if (genreName.includes(query) || query.includes(genreName)) {
+              matches = true;
+            }
+            // Проверяем категорию
+            if (categoryName.includes(query) || query.includes(categoryName)) {
+              matches = true;
+            }
+          }
+          
+          if (matches) {
+            results.push({
+              category,
+              genre,
+              title: item,
+              description: this.getDescriptionForItem(category, item)
+            });
+            
+            // Ограничиваем количество результатов
+            if (results.length >= 30) {
+              return results;
+            }
+          }
+        }
       }
     }
     
-    // Если ничего не найдено
-    const categoryNames = {
-      all: 'всех категориях',
-      films: 'фильмах',
-      books: 'книгах',
-      courses: 'курсах',
-      music: 'музыке',
-      games: 'играх',
-      podcasts: 'подкастах'
-    };
-    
-    const categoryName = categoryNames[this.selectedCategory] || 'выбранной категории';
-    
-    return `К сожалению, я не нашел рекомендаций по вашему запросу в ${categoryName}. Попробуйте уточнить запрос или выбрать другую категорию. Например: "Порекомендуй фильмы в жанре научная фантастика" или "Какие книги по саморазвитию посоветуешь?"`;
-  }
-  
-  getRecommendationsFromCategory(category, genre, count) {
-    const items = recommendationsDB[category]?.[genre] || [];
-    const shuffled = [...items].sort(() => Math.random() - 0.5);
-    return shuffled.slice(0, count).map(title => ({
-      title,
-      description: this.getDescriptionForItem(category, title),
-      rating: (7.0 + Math.random() * 3).toFixed(1)
-    }));
-  }
-  
-  getRecommendationsFromAllGenres(category, count) {
-    const allItems = [];
-    const genres = recommendationsDB[category];
-    
-    if (!genres) return [];
-    
-    Object.values(genres).forEach(genreItems => {
-      allItems.push(...genreItems);
-    });
-    
-    const shuffled = [...allItems].sort(() => Math.random() - 0.5);
-    return shuffled.slice(0, count).map(title => ({
-      title,
-      description: this.getDescriptionForItem(category, title),
-      rating: (7.0 + Math.random() * 3).toFixed(1)
-    }));
+    return results;
   }
   
   getDescriptionForItem(category, title) {
     const descriptions = {
-      films: "Отличный фильм для просмотра с рейтингом выше 7.0",
-      books: "Интересная книга для чтения с высоким рейтингом",
-      courses: "Полезный образовательный материал с положительными отзывами",
-      music: "Отличная музыка для прослушивания с высокими оценками",
-      games: "Увлекательная игра с высоким рейтингом пользователей",
-      podcasts: "Интересный подкаст с множеством положительных отзывов"
+      films: "Отличный фильм для просмотра",
+      books: "Интересная книга для чтения",
+      courses: "Полезный образовательный материал",
+      music: "Отличная музыка для прослушивания",
+      games: "Увлекательная игра",
+      podcasts: "Интересный подкаст"
     };
     return descriptions[category] || "Рекомендую ознакомиться";
   }
   
-  addMessage(sender, content) {
-    const chat = document.getElementById('ai-chat');
-    const messageDiv = document.createElement('div');
-    messageDiv.className = `message ${sender}-message`;
+  displayResults(results, query) {
+    const resultsContainer = document.getElementById('ai-results');
     
-    const senderName = sender === 'user' ? 'Вы' : 'AI Помощник';
-    
-    const formattedContent = content.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-    
-    messageDiv.innerHTML = `
-      <div class="message-sender">${senderName}</div>
-      <div class="message-content">${formattedContent}</div>
-    `;
-    
-    chat.appendChild(messageDiv);
-    this.chatHistory.push({ sender, content, timestamp: new Date() });
-    
-    if (this.chatHistory.length > 50) {
-      this.chatHistory = this.chatHistory.slice(-50);
+    if (results.length === 0) {
+      resultsContainer.innerHTML = `
+        <div class="no-results">
+          По запросу "<strong>${query}</strong>" ничего не найдено.
+          <br>
+          Попробуйте другие ключевые слова, например: "научная фантастика", "программирование", "рок музыка"
+        </div>
+      `;
+      return;
     }
-  }
-  
-  showTypingIndicator() {
-    this.isTyping = true;
-    document.getElementById('ai-typing').classList.add('active');
-  }
-  
-  hideTypingIndicator() {
-    this.isTyping = false;
-    document.getElementById('ai-typing').classList.remove('active');
+    
+    let html = `<div style="margin-bottom:12px;color:var(--color-text-secondary);">
+                  Найдено <strong>${results.length}</strong> рекомендаций по запросу "<strong>${query}</strong>":
+                </div>`;
+    
+    // Группируем результаты по категориям для удобства
+    const groupedResults = {};
+    results.forEach(result => {
+      if (!groupedResults[result.category]) {
+        groupedResults[result.category] = [];
+      }
+      groupedResults[result.category].push(result);
+    });
+    
+    // Выводим результаты по категориям
+    for (const [category, categoryResults] of Object.entries(groupedResults)) {
+      const categoryName = categoryNames[category] || category;
+      
+      html += `<div style="margin:16px 0 8px;font-weight:600;color:var(--color-text);">
+                 ${categoryName}
+               </div>`;
+      
+      categoryResults.forEach((result, index) => {
+        html += `
+          <div class="ai-result-item">
+            <div class="ai-result-header">
+              <span class="ai-result-category">${genreLabels[result.category]?.[result.genre] || result.genre}</span>
+              <div class="ai-result-title">${result.title}</div>
+            </div>
+            <div class="ai-result-description">${result.description}</div>
+          </div>
+        `;
+      });
+    }
+    
+    resultsContainer.innerHTML = html;
   }
 }
 
 // ===============================
 // Инициализация
 // ===============================
-let aiAssistant;
+let simpleAssistant;
 
 document.addEventListener("DOMContentLoaded", () => {
+  // Тихо подсчитываем рекомендации для отладки (не показываем пользователю)
+  let totalCount = 0;
+  for (const category in recommendationsDB) {
+    for (const genre in recommendationsDB[category]) {
+      totalCount += recommendationsDB[category][genre].length;
+    }
+  }
+  console.log(`Всего рекомендаций в базе: ${totalCount}`);
+  
+  // Инициализируем приложение
   initAuth();
   initRecommendations();
   checkAuthState();
-  aiAssistant = new AIAssistant();
+  simpleAssistant = new SimpleAssistant();
 });
 
 // Проверка состояния аутентификации
@@ -1041,10 +910,6 @@ function openModal(show, hide) {
 
 // Рекомендации
 function initRecommendations() {
-  document.getElementById("rating").oninput = (e) => {
-    document.getElementById("rating-value").textContent = parseFloat(e.target.value).toFixed(1);
-  };
-
   document.getElementById("category").onchange = updateGenres;
   updateGenres();
 
@@ -1052,14 +917,13 @@ function initRecommendations() {
     e.preventDefault();
     const category = document.getElementById("category").value;
     const genre = document.getElementById("selected-genre").value;
-    const difficulty = document.querySelector('input[name="difficulty"]:checked').value;
 
     if (!category || !genre) {
       showNotification("Выберите категорию и жанр", "error");
       return;
     }
 
-    const recs = generateRecommendations(category, genre, difficulty);
+    const recs = generateRecommendations(category, genre);
     displayResults(recs);
   };
 }
@@ -1089,17 +953,16 @@ function updateGenres() {
   });
 }
 
-// Обновленная функция генерации рекомендаций - теперь выдаёт больше
-function generateRecommendations(category, genre, difficulty) {
+// Обновленная функция генерации рекомендаций - теперь выдаёт фиксированное количество
+function generateRecommendations(category, genre) {
   const base = recommendationsDB[category]?.[genre] || [];
   const shuffled = [...base].sort(() => Math.random() - 0.5);
-  // Увеличиваем количество рекомендаций
-  const count = { easy: 20, medium: 40, hard: 60 }[difficulty] || 20;
+  // Фиксированное количество рекомендаций (например, 20)
+  const count = 20;
   return shuffled.slice(0, count).map((title, i) => ({
     index: i + 1,
     title,
-    description: getRandomDescription(category),
-    rating: (7.5 + Math.random() * 2).toFixed(1)
+    description: getRandomDescription(category)
   }));
 }
 
@@ -1191,7 +1054,6 @@ function displayResults(recs) {
           <div class="rec-title">${rec.title}</div>
         </div>
         <div class="rec-description">${rec.description}</div>
-        <div class="rec-rating">⭐ ${rec.rating}</div>
 
         <div class="review-section">
           <form class="review-form ${formClass}" data-title="${rec.title}">
