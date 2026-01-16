@@ -434,7 +434,7 @@ const recommendationsDB = {
       "How Did This Get Made?", "The Flop House", "We Hate Movies", "The Worst Idea of All Time", "The Bugle",
       "The News Quiz", "The Now Show", "The Infinite Monkey Cage", "The Unbelievable Truth", "Just a Minute",
       "I'm Sorry I Haven't a Clue", "The Mash Report", "The Daily Show", "Last Week Tonight", "The Colbert Report",
-      "The Opposition", "Full Frontal", "The Break with Michelle Wolf", "The Chris Gethard Show", "The Todd Glass Show"
+      "The Opposition", "Full Frontal", "The Chris Gethard Show", "The Todd Glass Show", "The Tim Dillon Show"
     ]),
     news: generate100Items([
       "The Daily", "Up First", "Today, Explained", "The Intelligence", "Global News Podcast",
@@ -499,7 +499,7 @@ function addReview(title, rating, text, userEmail) {
   if (!reviews[title]) reviews[title] = [];
 
   const review = {
-    id: Date.now() + Math.random(),        // число
+    id: Date.now() + Math.random(),
     rating: parseFloat(rating),
     text: text.trim(),
     userEmail,
@@ -511,12 +511,11 @@ function addReview(title, rating, text, userEmail) {
   return review;
 }
 
-// исправленная функция удаления
 function deleteReviewFromStorage(title, reviewId) {
   const reviews = loadReviews();
   if (!reviews[title]) return false;
 
-  const numericId = Number(reviewId);      // приведение типов
+  const numericId = Number(reviewId);
   reviews[title] = reviews[title].filter(r => r.id !== numericId);
 
   if (reviews[title].length === 0) {
@@ -547,7 +546,6 @@ class SimpleAssistant {
     const aiForm = document.getElementById('ai-form');
     const aiInput = document.getElementById('ai-input');
     
-    // Обработка формы поиска
     aiForm.addEventListener('submit', (e) => {
       e.preventDefault();
       const query = aiInput.value.trim();
@@ -556,7 +554,6 @@ class SimpleAssistant {
       }
     });
     
-    // Примеры запросов
     document.querySelectorAll('.example-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         const example = btn.getAttribute('data-example');
@@ -565,7 +562,6 @@ class SimpleAssistant {
       });
     });
     
-    // Автофокус на поле ввода
     aiInput.focus();
   }
   
@@ -573,11 +569,9 @@ class SimpleAssistant {
     const loading = document.getElementById('ai-loading');
     const resultsContainer = document.getElementById('ai-results');
     
-    // Показываем индикатор загрузки
     loading.classList.add('active');
     resultsContainer.innerHTML = '';
     
-    // Имитация задержки для реалистичности
     setTimeout(() => {
       const results = this.performSearch(query.toLowerCase());
       this.displayResults(results, query);
@@ -589,19 +583,15 @@ class SimpleAssistant {
     const results = [];
     const searchWords = query.split(' ').filter(word => word.length > 2);
     
-    // Если запрос слишком короткий
     if (searchWords.length === 0) {
       return results;
     }
     
-    // Проходим по всем категориям и жанрам
     for (const [category, genres] of Object.entries(recommendationsDB)) {
       for (const [genre, items] of Object.entries(genres)) {
         for (const item of items) {
-          // Проверяем, содержит ли элемент ключевые слова
           const itemLower = item.toLowerCase();
           
-          // Проверяем каждое ключевое слово
           let matches = false;
           for (const word of searchWords) {
             if (itemLower.includes(word)) {
@@ -610,16 +600,13 @@ class SimpleAssistant {
             }
           }
           
-          // Также проверяем жанр и категорию
           const genreName = genreLabels[category]?.[genre]?.toLowerCase() || '';
           const categoryName = categoryNames[category]?.toLowerCase() || '';
           
           if (!matches) {
-            // Проверяем жанр
             if (genreName.includes(query) || query.includes(genreName)) {
               matches = true;
             }
-            // Проверяем категорию
             if (categoryName.includes(query) || query.includes(categoryName)) {
               matches = true;
             }
@@ -633,7 +620,6 @@ class SimpleAssistant {
               description: this.getDescriptionForItem(category, item)
             });
             
-            // Ограничиваем количество результатов
             if (results.length >= 30) {
               return results;
             }
@@ -675,7 +661,6 @@ class SimpleAssistant {
                   Найдено <strong>${results.length}</strong> рекомендаций по запросу "<strong>${query}</strong>":
                 </div>`;
     
-    // Группируем результаты по категориям для удобства
     const groupedResults = {};
     results.forEach(result => {
       if (!groupedResults[result.category]) {
@@ -684,7 +669,6 @@ class SimpleAssistant {
       groupedResults[result.category].push(result);
     });
     
-    // Выводим результаты по категориям
     for (const [category, categoryResults] of Object.entries(groupedResults)) {
       const categoryName = categoryNames[category] || category;
       
@@ -715,7 +699,6 @@ class SimpleAssistant {
 let simpleAssistant;
 
 document.addEventListener("DOMContentLoaded", () => {
-  // Тихо подсчитываем рекомендации для отладки (не показываем пользователю)
   let totalCount = 0;
   for (const category in recommendationsDB) {
     for (const genre in recommendationsDB[category]) {
@@ -724,11 +707,30 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   console.log(`Всего рекомендаций в базе: ${totalCount}`);
   
-  // Инициализируем приложение
   initAuth();
   initRecommendations();
   checkAuthState();
   simpleAssistant = new SimpleAssistant();
+  
+  // Инициализация гамбургер-меню
+  const hamburger = document.getElementById('hamburger');
+  const navMenu = document.getElementById('nav-menu');
+  
+  if (hamburger && navMenu) {
+    hamburger.addEventListener('click', () => {
+      navMenu.classList.toggle('active');
+      hamburger.innerHTML = navMenu.classList.contains('active') 
+        ? '<i class="fas fa-times"></i>' 
+        : '<i class="fas fa-bars"></i>';
+    });
+    
+    document.querySelectorAll('.nav-menu a').forEach(link => {
+      link.addEventListener('click', () => {
+        navMenu.classList.remove('active');
+        hamburger.innerHTML = '<i class="fas fa-bars"></i>';
+      });
+    });
+  }
 });
 
 // Проверка состояния аутентификации
@@ -776,11 +778,16 @@ function initAuth() {
     };
   });
 
-  // Регистрация через Firebase
+  // Исправленная регистрация через Firebase
   document.getElementById("register-form").onsubmit = (e) => {
     e.preventDefault();
     const email = document.getElementById("reg-email").value.trim();
-    const password = document.getElementById("reg-password").value;
+    const password = document.getElementById("reg-password").value.replace(/\s/g, ''); // Удаляем пробелы
+
+    if (email === "" || password === "") {
+      showNotification("Email и пароль не могут быть пустыми", "error");
+      return;
+    }
 
     if (password.length < 6) {
       showNotification("Пароль должен быть минимум 6 символов", "error");
@@ -789,11 +796,11 @@ function initAuth() {
 
     firebase.auth().createUserWithEmailAndPassword(email, password)
       .then((userCredential) => {
-        // Успешная регистрация
         currentUser = userCredential.user;
         loginSuccess();
         showNotification("✅ Аккаунт создан!", "success");
         elements.modalRegister.classList.remove("active");
+        document.getElementById("register-form").reset();
       })
       .catch((error) => {
         console.error("Ошибка регистрации:", error);
@@ -813,19 +820,24 @@ function initAuth() {
       });
   };
 
-  // Вход через Firebase
+  // Исправленный вход через Firebase
   document.getElementById("login-form").onsubmit = (e) => {
     e.preventDefault();
     const email = document.getElementById("login-email").value.trim();
-    const password = document.getElementById("login-password").value;
+    const password = document.getElementById("login-password").value.replace(/\s/g, ''); // Удаляем пробелы
+
+    if (email === "" || password === "") {
+      showNotification("Введите email и пароль", "error");
+      return;
+    }
 
     firebase.auth().signInWithEmailAndPassword(email, password)
       .then((userCredential) => {
-        // Успешный вход
         currentUser = userCredential.user;
         loginSuccess();
         showNotification("✅ Вход выполнен!", "success");
         elements.modalLogin.classList.remove("active");
+        document.getElementById("login-form").reset();
       })
       .catch((error) => {
         console.error("Ошибка входа:", error);
@@ -953,11 +965,9 @@ function updateGenres() {
   });
 }
 
-// Обновленная функция генерации рекомендаций - теперь выдаёт фиксированное количество
 function generateRecommendations(category, genre) {
   const base = recommendationsDB[category]?.[genre] || [];
   const shuffled = [...base].sort(() => Math.random() - 0.5);
-  // Фиксированное количество рекомендаций (например, 20)
   const count = 20;
   return shuffled.slice(0, count).map((title, i) => ({
     index: i + 1,
@@ -966,7 +976,6 @@ function generateRecommendations(category, genre) {
   }));
 }
 
-// Функция для генерации разнообразных описаний
 function getRandomDescription(category) {
   const descriptions = {
     films: [
@@ -1032,9 +1041,16 @@ function displayResults(recs) {
   list.innerHTML = recs.map((rec) => {
     const reviews = getReviewsForTitle(rec.title);
     const reviewHtml = reviews.length
-      ? reviews.map(review => `
+      ? reviews.map(review => {
+        // Проверяем, является ли текущий пользователь автором отзыва
+        const isOwner = currentUser && currentUser.email === review.userEmail;
+        const deleteButton = isOwner 
+          ? `<button class="review-delete" onclick="window.deleteReview('${rec.title}', '${review.id}')">×</button>`
+          : '';
+        
+        return `
         <div class="review-item" data-review-id="${review.id}">
-          <button class="review-delete" onclick="window.deleteReview('${rec.title}', '${review.id}')">×</button>
+          ${deleteButton}
           <div class="review-header">
             <div class="review-author">${review.userEmail}</div>
             <div class="review-rating">⭐ ${review.rating.toFixed(1)}</div>
@@ -1042,7 +1058,7 @@ function displayResults(recs) {
           <p class="review-text">${review.text}</p>
           <div class="review-date">${new Date(review.timestamp).toLocaleString('ru-RU')}</div>
         </div>
-      `).join('')
+      `}).join('')
       : '<div class="no-reviews">Отзывов пока нет. Будьте первым! ✨</div>';
 
     const formClass = currentUser ? '' : 'disabled';
@@ -1073,28 +1089,36 @@ function displayResults(recs) {
     `;
   }).join("");
 
+  // Обработчики для range slider
+  document.querySelectorAll(".review-form input[type='range']").forEach(slider => {
+    const span = slider.nextElementSibling;
+    slider.oninput = (e) => {
+      span.textContent = parseFloat(e.target.value).toFixed(1);
+    };
+  });
+
+  // Обработчики форм отзывов
   document.querySelectorAll(".review-form").forEach(form => {
     if (form.classList.contains("disabled")) return;
 
-    const slider = form.querySelector('input[name="rating"]');
-    const span = form.querySelector('span');
     const title = form.dataset.title;
-
-    slider.oninput = e => {
-      span.textContent = parseFloat(e.target.value).toFixed(1);
-    };
 
     form.onsubmit = e => {
       e.preventDefault();
       const formData = new FormData(form);
       const rating = formData.get("rating");
-      const text = formData.get("text");
+      const text = formData.get("text").trim();
+
+      if (!text) {
+        showNotification("Введите текст отзыва", "error");
+        return;
+      }
 
       if (addReview(title, rating, text, currentUser.email)) {
         showNotification("⭐ Отзыв сохранён!", "success");
         form.reset();
-        slider.value = 5;
-        span.textContent = "5.0";
+        form.querySelector('span').textContent = "5.0";
+        form.querySelector('input[type="range"]').value = 5;
         updateResults();
       }
     };
@@ -1103,10 +1127,24 @@ function displayResults(recs) {
   container.classList.remove("hidden");
 }
 
-// глобальная функция удаления
+// глобальная функция удаления отзыва
 window.deleteReview = (title, reviewId) => {
   if (!currentUser) {
     showNotification("🔐 Войдите для удаления отзывов", "error");
+    return;
+  }
+
+  // Проверяем автора отзыва
+  const reviews = getReviewsForTitle(title);
+  const review = reviews.find(r => r.id === Number(reviewId));
+  
+  if (!review) {
+    showNotification("Отзыв не найден", "error");
+    return;
+  }
+  
+  if (review.userEmail !== currentUser.email) {
+    showNotification("Вы не можете удалить чужой отзыв", "error");
     return;
   }
 
@@ -1116,7 +1154,7 @@ window.deleteReview = (title, reviewId) => {
       showNotification("🗑️ Отзыв удалён!", "success");
       updateResults();
     } else {
-      showNotification("Ошибка удаления (отзыв не найден)", "error");
+      showNotification("Ошибка удаления", "error");
     }
   }
 };
